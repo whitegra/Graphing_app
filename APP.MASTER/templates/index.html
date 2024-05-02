@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function openHelpModal(graphType) {
+            var url = "/help/" + graphType;  // Assuming Flask route to serve help content
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('helpModalContent').innerHTML = html;
+                    document.getElementById('helpModal').style.display = 'block';
+                })
+                .catch(error => console.error('Error loading the help file:', error));
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+    </script>
+    <title>Data Visualizer</title>
+</head>
+<body>
+    <h1>Gracie's Graphing App</h1>
+    
+    <!-- About Section -->
+    <h2>About</h2>
+    <p>This web application allows you to upload a CSV file and generate various types of graphs based on the data provided. Please follow the instructions below:</p>
+    <ul>
+        <li>Upload your CSV file using the provided form.</li>
+        <li>Enter the column names for the X and Y axes. Optionally, you can provide additional columns for a second set of X and Y values.</li>
+        <li>Select the type of graph you want to generate and click on the corresponding button to generate or on 'Help' for more info.</li>
+        <li>Click the corresponding "Generate Graph" button to create the graph.</li>
+    </ul>
+    
+    <!-- Graph Generation Form -->
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label for="file">Upload your CSV file:</label>
+        <input type="file" id="file" name="file" required><br><br>
+        <label for="x_column">X column name:</label>
+        <input type="text" id="x_column" name="x_column" required><br><br>
+        <label for="x2_column">X2 column name (optional):</label>
+        <input type="text" id="x2_column" name="x2_column"><br><br>
+        <label for="y_column">Y column name:</label>
+        <input type="text" id="y_column" name="y_column" required><br><br>
+        <label for="y2_column">Y2 column name (optional):</label>
+        <input type="text" id="y2_column" name="y2_column"><br><br>
+        <!-- Buttons for Graph Types with Help Links -->
+        <div>
+            <button type="submit" name="graph_type" value="line">Generate Line Graph</button>
+            <button type="button" onclick="openHelpModal('line')">Help</button>
+        </div>
+        <div>
+            <button type="submit" name="graph_type" value="scatter">Generate Scatter Graph</button>
+            <button type="button" onclick="openHelpModal('scatter')">Help</button>
+        </div>
+        <div>
+            <button type="submit" name="graph_type" value="linear_regression">Generate Linear Regression</button>
+            <button type="button" onclick="openHelpModal('regression')">Help</button>
+        </div>
+        <div>
+            <button type="submit" name="graph_type" value="pareto_front">Generate Pareto Front</button>
+            <button type="button" onclick="openHelpModal('pareto')">Help</button>
+        </div><br><br>
+    </form>
+
+    <!-- Help Modal -->
+    <div id="helpModal" style="display:none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div style="background-color: pink; margin: 15% auto; padding: 20px; width: 80%;">
+            <span onclick="closeHelpModal()" style="cursor: pointer;">&times; Close</span>
+            <div id="helpModalContent"></div>
+        </div>
+    </div>
+
+    {% if image %}
+        <h2>Graph:</h2>
+        <img src="{{ url_for('static', filename='images/' + image) }}" alt="Generated Graph">
+    {% else %}
+        <p>No graph generated yet. Please submit the form above to generate a graph.</p>
+    {% endif %}
+</body>
+</html>

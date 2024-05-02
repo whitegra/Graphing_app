@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    width: 70%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+input, select, button {
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding does not affect width */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: inline-block; /* Allows buttons to sit side by side */
+    width: auto; /* Overrides the width for inputs and selects */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.help-button {
+    background-color: #28a745;
+}
+
+.help-button:hover {
+    background-color: #1e7e34;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+input[type="submit"]:hover {
+    opacity: 0.8;
+}
+
+label {
+    font-weight: bold;
+    display: block; /* Ensures each label is on a new line */
+}
+
+img {
+    display: block;
+    margin-top: 20px;
+    max-width: 100%;
+    height: auto;
+}
+
+#helpModal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensures the modal is above all other content */
+}
+
+#helpModalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%; /* Adjust width based on preference */
+    margin: auto;
+}
+
+#helpModal span {
+    float: right;
+    font-size: 25px;
+    font-weight: bold;
+    cursor: pointer;
+}
