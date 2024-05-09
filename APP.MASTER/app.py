@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
 from graph_utils.line import plot_line
 from graph_utils.scatter import plot_scatter
 from graph_utils.regression import plot_linear_regression
