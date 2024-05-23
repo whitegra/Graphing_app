@@ -6,6 +6,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #f9f9f9;
+    background-color: lightblue; /* Set the background color to light blue */
 }
 
 input, select, button {
@@ -24,6 +25,9 @@ button {
     cursor: pointer;
     display: inline-block; /* Allows buttons to sit side by side */
     width: auto; /* Overrides the width for inputs and selects */
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 25px;
 }
 
 button:hover {
@@ -42,6 +46,9 @@ input[type="submit"] {
     background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 25px;
 }
 
 input[type="submit"]:hover {
@@ -82,8 +89,34 @@ img {
 }
 
 #helpModal span {
-    float: right;
+    float: left;
     font-size: 25px;
     font-weight: bold;
     cursor: pointer;
+}
+
+/* New styles for graph images */
+.image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.image-container a {
+    margin: 5px;
+    text-decoration: none; /* Remove underline from links */
+}
+
+.image-container img {
+    width: 40rem;
+    height: 36rem;
+    margin: 5px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    transition: transform 0.3s; /* Add smooth transition on hover */
+}
+
+.image-container img:hover {
+    transform: scale(1.05); /* Zoom in slightly on hover */
 }

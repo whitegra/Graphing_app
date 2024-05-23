@@ -1,71 +1,78 @@
-import streamlit as st
+from flask import Flask, render_template, request
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
 from graph_utils.line import plot_line
 from graph_utils.scatter import plot_scatter
 from graph_utils.regression import plot_linear_regression
 from graph_utils.pareto import plot_pareto
 
-st.set_page_config(page_title='Graph Generator', page_icon=':chart_with_upwards_trend:')
+app = Flask(__name__, template_folder='templates')
+app.config['UPLOAD_FOLDER'] = 'static/images'
+app.config['ALLOWED_EXTENSIONS'] = {'csv'}
+app.config['SECRET_KEY'] = "potato"
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'csv'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+@app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    st.title('Upload CSV File for Graph Generation')
-    file = st.file_uploader("Choose a CSV file", type="csv")
-    if file is not None:
-        if not allowed_file(file.name):
-            st.error("Invalid file type.")
-            return
-        x_column = st.text_input("Enter X Column Name")
-        y_column = st.text_input("Enter Y Column Name")
-        x2_column = st.text_input("Enter X2 Column Name")
-        y2_column = st.text_input("Enter Y2 Column Name")
-        graph_type = st.selectbox(
-            "Select Graph Type",
-            ("line", "scatter", "linear_regression", "pareto_front")
-        )
-        if st.button("Generate Graph"):
-            filepath = os.path.join('static/images', 'uploaded.csv')
-            with open(filepath, 'wb') as f:
-                f.write(file.getvalue())
+    if request.method == 'POST':
+        if 'file' in request.files:
+            file = request.files['file']
+            if not file or not allowed_file(file.filename):
+                return render_template('index.html', image=None, error="Invalid file type.")
+            filename = 'uploaded.csv'
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
             df = pd.read_csv(filepath)
-            output_filename = 'output.png'
-            output_filepath = os.path.join('static/images', output_filename)
-            if graph_type == 'line':
-                plot_line(df, x_column, y_column, output_filepath)
-            elif graph_type == 'scatter':
-                plot_scatter(df, x_column, y_column, x2_column, y2_column, output_filepath)
-            elif graph_type == 'linear_regression':
-                plot_linear_regression(df, x_column, y_column, output_filepath)
-            elif graph_type == 'pareto_front':
-                plot_pareto(df, x_column, y_column, output_filepath)
-            else:
-                st.error("Invalid graph type.")
-                return
-            st.image(output_filepath, use_column_width=True)
+            x_column = request.form.get('x_column')
+            y_column = request.form.get('y_column')
+            if not x_column or not y_column:
+                return render_template('index.html', image=None, error="Please provide both X and Y column names.")
+        else:
+            x_values = request.form.get('x_values')
+            y_values = request.form.get('y_values')
+            if not x_values or not y_values:
+                return render_template('index.html', image=None, error="Please provide both X and Y values.")
+            df = pd.DataFrame({'x': x_values.split(), 'y': y_values.split()})
+            x_column = 'x'
+            y_column = 'y'
 
-def help_content(graph_type):
-    help_text = {
-        'line': "Help content for line graph.",
-        'scatter': "Help content for scatter plot.",
-        'linear_regression': "Help content for linear regression.",
-        'pareto_front': "Help content for pareto front graph."
-    }
-    return help_text.get(graph_type, "Help content not found")
+        graph_type = request.form['graph_type']
+        output_filename = 'output.png'
+        output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
 
-def main():
-    upload_file()
-    graph_type = st.selectbox(
-        "Select Graph Type to Get Help",
-        ("line", "scatter", "linear_regression", "pareto_front")
-    )
-    if st.button("Get Help"):
-        st.write(help_content(graph_type))
+        if graph_type == 'line':
+            plot_line(df, x_column, y_column, output_filepath, request.form.get('x_values'), request.form.get('y_values'))
+        elif graph_type == 'scatter':
+            plot_scatter(df, x_column, y_column, output_filepath)
+        elif graph_type == 'linear_regression':
+            plot_linear_regression(df, x_column, y_column, output_filepath)
+        elif graph_type == 'pareto':
+            plot_pareto(df, x_column, y_column, output_filepath)
+        else:
+            return render_template('index.html', image=None, error="Invalid graph type.")
+
+        return render_template(f'index/index_{graph_type}.html', image=output_filename)
+
+    return render_template('index.html', image=None)
+
+@app.route('/index/index_line.html')
+def index_line():
+    return render_template('index/index_line.html', image=None)
+
+@app.route('/index/index_scatter.html')
+def index_scatter():
+    return render_template('index/index_scatter.html', image=None)
+
+@app.route('/index/index_linear_regression.html')
+def index_linear_regression():
+    return render_template('index/index_linear_regression.html', image=None)
+
+@app.route('/index/index_pareto.html')
+def index_pareto():
+    return render_template('index/index_pareto.html', image=None)
 
 if __name__ == '__main__':
-    main()
-# -*- coding: utf-8 -*-
+    app.run(debug=True)
 

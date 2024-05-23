@@ -24,7 +24,7 @@ def plot_pareto(df, x_col, y_col, save_path):
     plt.ylabel(y_col)
     plt.legend()
     plt.grid(True)
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=900)
     plt.show()
 
 
