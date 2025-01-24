@@ -4,14 +4,21 @@ import os
 import pandas as pd
 
 Libraries within program to import in main(app.py):
-from graph_utils.line import plot_line
-from graph_utils.scatter import plot_scatter
-from graph_utils.regression import plot_linear_regression
-from graph_utils.pareto import plot_pareto
+from graph_utils.line import plot_line (custom library in graph_utils)
+from graph_utils.scatter import plot_scatter (custom library in graph_utils)
+from graph_utils.regression import plot_linear_regression (custom library in graph utils)
+from graph_utils.pareto import plot_pareto (custom library in graph utils)
 
-Languages:
-Python --? graph utils
-CSS --> style
+Front - end:
+Python 
+CSS 
 HTML
 Java
-Flask --> only referenced in main (app.py)
+
+Back - end: 
+Python 
+Java
+
+Web framework: 
+Flask
+Django
