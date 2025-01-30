@@ -86,7 +86,7 @@ optimizer = dolphin.Adam(
 # -----------------------------
 # 7. Training Loop (Optimized for Speed)
 # -----------------------------
-print("\n🚀 Training Transformer Model...\n")
+print("\n Training Transformer Model...\n")
 for epoch in range(epochs):
     logits = transformer_forward(x_embed)
     loss = dolphin.cross_entropy_loss(logits, y_train)
